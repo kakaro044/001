@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Bot Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Nexus Bot Dashboard</h1>
+            <p>Manage your Discord bot settings and features</p>
+        </header>
+
+        <main>
+            <!-- Server Selection -->
+            <div class="server-selection">
+                <h2>Select Server</h2>
+                <select id="server-select">
+                    <option value="">Loading servers...</option>
+                </select>
+            </div>
+
+            <!-- Channel Selection -->
+            <div class="channel-selection" style="display: none;">
+                <h2>Select Channel</h2>
+                <select id="channel-select">
+                    <option value="">Select a server first</option>
+                </select>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Welcome System Card -->
+                <div class="card">
+                    <h2>👋 Welcome System</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="welcome-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="welcome-channel">Welcome Channel:</label>
+                        <select id="welcome-channel">
+                            <option value="general">#general</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="welcome-message">Welcome Message:</label>
+                        <textarea id="welcome-message"
+                            placeholder="Enter custom welcome message...">{member_mention} Welcome to {server_name}!</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="auto-role">Auto Role:</label>
+                        <select id="auto-role">
+                            <option value="none">None</option>
+                            <option value="member">@Member</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="welcome-color">Embed Color:</label>
+                        <input type="color" id="welcome-color" value="#3498db">
+                    </div>
+                    <button class="btn" id="save-welcome">Save Settings</button>
+                    <button class="btn secondary" id="test-welcome" style="margin-top: 10px; width: 100%;">Test
+                        Welcome</button>
+                </div>
+
+                <!-- Level System Card -->
+                <div class="card">
+                    <h2>📊 Level System</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="level-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="level-channel">Level Up Channel:</label>
+                        <select id="level-channel">
+                            <option value="general">#general</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level-check-channel">Level Check Channel:</label>
+                        <select id="level-check-channel">
+                            <option value="commands">#commands</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level-multiplier">XP Multiplier:</label>
+                        <input type="range" id="level-multiplier" min="1" max="5" value="1">
+                        <span id="multiplier-value">1x</span>
+                    </div>
+                    <button class="btn" id="save-level">Save Settings</button>
+                </div>
+
+                <!-- Music System Card -->
+                <div class="card">
+                    <h2>🎵 Music System</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="music-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="dj-role">DJ Role:</label>
+                        <select id="dj-role">
+                            <option value="everyone">@everyone</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="max-queue">Max Queue Size:</label>
+                        <input type="number" id="max-queue" min="1" max="1000" value="100">
+                    </div>
+                    <button class="btn" id="save-music">Save Settings</button>
+                </div>
+
+                <!-- VC Generator Card -->
+                <div class="card">
+                    <h2>🔊 VC Generator</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="vcgen-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="vcgen-channel">Generator Channel:</label>
+                        <select id="vcgen-channel">
+                            <option value="create-vc">🔊 Join to Create</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-vcgen">Save Settings</button>
+                </div>
+
+                <!-- Tickets System Card -->
+                <div class="card">
+                    <h2>🎫 Ticket System</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="ticket-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticket-channel">Ticket Panel Channel:</label>
+                        <select id="ticket-channel">
+                            <option value="tickets">#tickets</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticket-category">Ticket Category:</label>
+                        <select id="ticket-category">
+                            <option value="support">Support Tickets</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-ticket">Save Settings</button>
+                </div>
+
+                <!-- Self Roles Card -->
+                <div class="card">
+                    <h2>🎭 Self Roles</h2>
+                    <div class="toggle-container">
+                        <span>Enabled:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="selfrole-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="selfrole-channel">Role Panel Channel:</label>
+                        <select id="selfrole-channel">
+                            <option value="roles">#roles</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-selfrole">Save Settings</button>
+                </div>
+
+                <!-- YT Notify Card -->
+                <div class="card">
+                    <h2>🔔 YT Notify</h2>
+                    <div class="form-group">
+                        <label for="yt-channel-id">YouTube Channel ID:</label>
+                        <input type="text" id="yt-channel-id" placeholder="UC...">
+                    </div>
+                    <div class="form-group">
+                        <label for="yt-notify-channel">Notification Channel:</label>
+                        <select id="yt-notify-channel">
+                            <option value="announcements">#announcements</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="yt-message">Notification Message:</label>
+                        <textarea id="yt-message"
+                            placeholder="New video uploaded!">{channel_name} just uploaded a new video! {video_link}</textarea>
+                    </div>
+                    <button class="btn" id="save-yt">Save Settings</button>
+                </div>
+
+                <!-- Server Management Card -->
+                <div class="card">
+                    <h2>📋 Server Management</h2>
+                    <div class="toggle-container">
+                        <span>Leave Notify:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="leave-notify-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="leave-channel">Leave Log Channel:</label>
+                        <select id="leave-channel">
+                            <option value="logs">#logs</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-server">Save Settings</button>
+                    <button class="btn secondary" id="copy-server" style="margin-top: 10px; width: 100%;">Copy Server
+                        Settings</button>
+                </div>
+
+                <!-- Security System Card -->
+                <div class="card">
+                    <h2>🛡️ Security System</h2>
+                    <div class="toggle-container">
+                        <span>Anti-Spam (Auto):</span>
+                        <label class="switch">
+                            <input type="checkbox" id="antispam-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-container">
+                        <span>Ban Tracking:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="bantrack-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="log-channel">Log Channel:</label>
+                        <select id="log-channel">
+                            <option value="logs">#logs</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-security">Save Settings</button>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" id="save-all">💾 Save All Settings</button>
+                <button class="btn secondary" id="reset-all">🔄 Reset to Defaults</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Nexus Bot Dashboard v1.0 | Made with ❤️ for Discord</p>
+        </footer>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
